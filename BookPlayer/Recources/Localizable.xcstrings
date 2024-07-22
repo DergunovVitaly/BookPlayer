@@ -70,9 +70,6 @@
     "ok" : {
       "extractionState" : "manual"
     },
-    "OK" : {
-
-    },
     "select_book_and_chapter" : {
       "extractionState" : "manual",
       "localizations" : {

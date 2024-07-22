@@ -25,6 +25,8 @@ struct AudioBookPlayerView: View {
     let playbackRates: [Double] = Constants.playbackRates
     
     var body: some View {
+        LoginViewControllerRepresentable()
+                    .edgesIgnoringSafeArea(.all)
         VStack {
             Spacer()
             CoverImageView()

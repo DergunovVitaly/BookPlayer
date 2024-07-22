@@ -33,6 +33,7 @@
 		FEC6FA2D2C4D14AF0043BDD2 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = FEC6FA2C2C4D14AF0043BDD2 /* Localizable.xcstrings */; };
 		FEC6FA2F2C4D16710043BDD2 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC6FA2E2C4D16710043BDD2 /* Localization.swift */; };
 		FEC6FA312C4D1CBB0043BDD2 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC6FA302C4D1CBB0043BDD2 /* String+Extensions.swift */; };
+		FEC6FA382C4EE1DF0043BDD2 /* ExperienceExampleApproach.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEC6FA372C4EE1DF0043BDD2 /* ExperienceExampleApproach.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		FEC6FA2C2C4D14AF0043BDD2 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		FEC6FA2E2C4D16710043BDD2 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		FEC6FA302C4D1CBB0043BDD2 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		FEC6FA372C4EE1DF0043BDD2 /* ExperienceExampleApproach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperienceExampleApproach.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		FEC6F9AD2C47DD730043BDD2 = {
 			isa = PBXGroup;
 			children = (
+				FEC6FA362C4EE1970043BDD2 /* Example */,
 				FEC6F9B82C47DD730043BDD2 /* BookPlayer */,
 				FEC6F9C92C47DD750043BDD2 /* BookPlayerTests */,
 				FEC6F9B72C47DD730043BDD2 /* Products */,
@@ -280,6 +283,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		FEC6FA362C4EE1970043BDD2 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				FEC6FA372C4EE1DF0043BDD2 /* ExperienceExampleApproach.swift */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -430,6 +441,7 @@
 				FEC6FA152C4BCE040043BDD2 /* BookTitleView.swift in Sources */,
 				FEC6FA2F2C4D16710043BDD2 /* Localization.swift in Sources */,
 				FEC6FA2B2C4BD1CF0043BDD2 /* TimeInterval+Extensions.swift in Sources */,
+				FEC6FA382C4EE1DF0043BDD2 /* ExperienceExampleApproach.swift in Sources */,
 				FEC6FA062C490DF80043BDD2 /* AudioPlayer.swift in Sources */,
 				FEC6FA312C4D1CBB0043BDD2 /* String+Extensions.swift in Sources */,
 				FEC6FA272C4BD0DE0043BDD2 /* BookListView.swift in Sources */,
