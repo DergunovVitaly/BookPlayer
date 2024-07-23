@@ -114,7 +114,7 @@
 		FEC6F9AD2C47DD730043BDD2 = {
 			isa = PBXGroup;
 			children = (
-				FEC6FA362C4EE1970043BDD2 /* Example */,
+				FEC6FA362C4EE1970043BDD2 /* PreviousExperienceCode */,
 				FEC6F9B82C47DD730043BDD2 /* BookPlayer */,
 				FEC6F9C92C47DD750043BDD2 /* BookPlayerTests */,
 				FEC6F9B72C47DD730043BDD2 /* Products */,
@@ -283,12 +283,12 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		FEC6FA362C4EE1970043BDD2 /* Example */ = {
+		FEC6FA362C4EE1970043BDD2 /* PreviousExperienceCode */ = {
 			isa = PBXGroup;
 			children = (
 				FEC6FA372C4EE1DF0043BDD2 /* ExperienceExampleApproach.swift */,
 			);
-			path = Example;
+			path = PreviousExperienceCode;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
