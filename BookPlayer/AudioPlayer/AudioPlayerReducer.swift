@@ -90,20 +90,24 @@ let audioPlayerReducer = Reducer<AudioPlayerState, AudioPlayerAction, AudioPlaye
         
     case .selectChapter(let index):
         state.selectedChapterIndex = index
+        state.showBookList = false // Скрытие BookListView
         let fileName = AudioBookModel.allBooks[state.selectedBookIndex].chapters[state.selectedChapterIndex].audioFileName
         print("Selecting chapter and setting up audio for file: \(fileName)")
         return Effect.concatenate(
             Effect(value: .setupAudioPlayer(fileName)),
-            Effect(value: .play),
-            Effect(value: .toggleBookList)
+            Effect(value: .play)
         )
         
-    case .toggleBookList:
-        state.showBookList.toggle()
+    case .toggleBookList(let show):
+        state.showBookList = show
         return .none
         
     case .updateErrorMessage(let message):
         state.errorMessage = message.map { IdentifiableString(value: $0) }
+        return .none
+        
+    case .dismissErrorMessage:
+        state.errorMessage = nil
         return .none
         
     case .audioPlayerFinishedPlaying:

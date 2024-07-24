@@ -8,10 +8,6 @@
 import SwiftUI
 import ComposableArchitecture
 
-fileprivate struct Constants {
-    static let playbackRates = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]
-}
-
 struct AudioBookPlayerView: View {
     let store: Store<AudioPlayerState, AudioPlayerAction>
     
@@ -41,11 +37,11 @@ struct AudioBookPlayerView: View {
                 
                 BookListButtonView(showBookList: viewStore.binding(
                     get: \.showBookList,
-                    send: AudioPlayerAction.toggleBookList
+                    send: { .toggleBookList($0) }
                 ))
                 .sheet(isPresented: viewStore.binding(
                     get: \.showBookList,
-                    send: AudioPlayerAction.toggleBookList
+                    send: { .toggleBookList($0) }
                 )) {
                     BookListView(store: store)
                 }
@@ -54,10 +50,12 @@ struct AudioBookPlayerView: View {
             }
             .padding()
             .background(Color(red: 1.0, green: 0.972, blue: 0.955))
-            .alert(item: viewStore.binding(
-                get: \.errorMessage,
-                send: { .updateErrorMessage($0?.value) }
-            )) { message in
+            .alert(
+                item: viewStore.binding(
+                    get: \.errorMessage,
+                    send: .dismissErrorMessage
+                )
+            ) { message in
                 Alert(title: Text(message.value), dismissButton: .default(Text("OK")))
             }
         }

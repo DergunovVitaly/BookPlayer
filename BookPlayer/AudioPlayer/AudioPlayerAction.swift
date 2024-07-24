@@ -21,7 +21,8 @@ enum AudioPlayerAction: Equatable {
     case updateCurrentTime(TimeInterval)
     case selectBook(Int)
     case selectChapter(Int)
-    case toggleBookList
+    case toggleBookList(Bool)
     case updateErrorMessage(String?)
+    case dismissErrorMessage
     case audioPlayerFinishedPlaying
 }

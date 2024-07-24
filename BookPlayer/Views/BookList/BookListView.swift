@@ -21,6 +21,7 @@ struct BookListView: View {
                                 Button(action: {
                                     viewStore.send(.selectBook(bookIndex))
                                     viewStore.send(.selectChapter(chapterIndex))
+                                    viewStore.send(.toggleBookList(false))  // Скрытие BookListView
                                 }) {
                                     Text(AudioBookModel.allBooks[bookIndex].chapters[chapterIndex].title)
                                 }
