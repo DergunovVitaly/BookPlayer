@@ -7,195 +7,74 @@
 
 import Foundation
 import AVFoundation
+import ComposableArchitecture
 
-class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
-    @Published var isPlaying = false
-    @Published var currentTime: TimeInterval = 0.0
-    @Published var playbackRate: Float = 1.0
-    @Published var errorMessage: String?
-    
+class AudioPlayer: NSObject, AVAudioPlayerDelegate {
+    static let shared = AudioPlayer()
     private var player: AVAudioPlayer?
-    private var timer: Timer?
-    private var isDragging = false
     
-    func setupAudioPlayer(with fileName: String, fileExtension: String = "mp3") async {
-        guard let audioURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension) else {
-            updateErrorMessage(with: .fileNotFound)
-            return
+    func setupAudioPlayer(with fileName: String) -> Effect<Never, Never> {
+        print("Setting up audio player with file: \(fileName)")
+        guard let audioURL = Bundle.main.url(forResource: fileName, withExtension: "mp3") else {
+            print("Audio file not found")
+            return .none
         }
         
         do {
             player = try AVAudioPlayer(contentsOf: audioURL)
             player?.delegate = self
-            player?.enableRate = true
             player?.prepareToPlay()
-            player?.rate = playbackRate
-            resetPlayerState()
-            startTimer()
+            print("Audio player prepared and ready to play")
+            return .fireAndForget { [weak self] in
+                self?.player?.play()
+                print("Audio player started playing")
+            }
         } catch {
-            updateErrorMessage(with: .initializationFailed(error))
+            print("Failed to initialize audio player: \(error)")
+            return .none
         }
     }
     
-    func playPauseAudio() async {
-        guard let player = player else {
-            updateErrorMessage(with: .playerNotInitialized)
-            return
-        }
-        
-        DispatchQueue.main.async {
-            if player.isPlaying {
-                self.pausePlayer()
-            } else {
-                self.playPlayer()
-            }
+    func play() -> Effect<Never, Never> {
+        return .fireAndForget { [weak self] in
+            self?.player?.play()
+            print("Audio player resumed playing")
         }
     }
     
-    func play() async {
-        guard player != nil else {
-            updateErrorMessage(with: .playerNotInitialized)
-            return
-        }
-        playPlayer()
-    }
-    
-    func stopAudio() async {
-        guard player != nil else {
-            updateErrorMessage(with: .playerNotInitialized)
-            return
-        }
-        stopPlayer()
-    }
-    
-    func rewindAudio() async {
-        adjustCurrentTime(by: -10)
-    }
-    
-    func forwardAudio() async {
-        adjustCurrentTime(by: 10)
-    }
-    
-    func seekAudio(to time: TimeInterval) async {
-        guard let player = player else {
-            updateErrorMessage(with: .playerNotInitialized)
-            return
-        }
-        
-        DispatchQueue.main.async {
-            player.currentTime = time
-            self.currentTime = player.currentTime
-            if self.isPlaying {
-                player.play()
-                self.startTimer()
-            }
+    func pause() -> Effect<Never, Never> {
+        return .fireAndForget { [weak self] in
+            self?.player?.pause()
+            print("Audio player paused")
         }
     }
     
-    func setPlaybackRate(to rate: Float) async {
-        DispatchQueue.main.async {
-            self.playbackRate = rate
-        }
-        guard let player = player else {
-            updateErrorMessage(with: .playerNotInitialized)
-            return
-        }
-        player.rate = self.playbackRate
-    }
-    
-    func playerDuration() -> Double {
-        return player?.duration ?? 0.0
-    }
-    
-    func startDragging() {
-        DispatchQueue.main.async {
-            self.isDragging = true
-        }
-        stopTimer()
-    }
-    
-    func stopDragging() {
-        DispatchQueue.main.async {
-            self.isDragging = false
-        }
-        if isPlaying {
-            startTimer()
+    func stop() -> Effect<Never, Never> {
+        return .fireAndForget { [weak self] in
+            self?.player?.stop()
+            self?.player = nil
+            print("Audio player stopped")
         }
     }
     
-    private func startTimer() {
-        stopTimer()
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            guard let self = self, let player = self.player, !self.isDragging else { return }
-            DispatchQueue.main.async {
-                self.currentTime = player.currentTime
-            }
+    func seek(to time: TimeInterval) -> Effect<Never, Never> {
+        return .fireAndForget { [weak self] in
+            self?.player?.currentTime = time
+            print("Audio player seeked to \(time) seconds")
         }
     }
     
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-    
-    private func playPlayer() {
-        guard let player = player else { return }
-        DispatchQueue.main.async {
-            player.play()
-            self.startTimer()
-            self.isPlaying = true
-        }
-    }
-    
-    private func pausePlayer() {
-        guard let player = player else { return }
-        DispatchQueue.main.async {
-            player.pause()
-            self.stopTimer()
-            self.isPlaying = false
-        }
-    }
-    
-    private func stopPlayer() {
-        guard let player = player else { return }
-        DispatchQueue.main.async {
-            player.stop()
-            self.isPlaying = false
-            self.currentTime = 0.0
-            self.stopTimer()
-        }
-    }
-    
-    private func adjustCurrentTime(by seconds: TimeInterval) {
-        guard let player = player else {
-            updateErrorMessage(with: .playerNotInitialized)
-            return
-        }
-        DispatchQueue.main.async {
-            player.currentTime += seconds
-            self.currentTime = player.currentTime
-        }
-    }
-    
-    private func resetPlayerState() {
-        DispatchQueue.main.async {
-            self.currentTime = 0.0
-            self.errorMessage = nil
-        }
-    }
-    
-    private func updateErrorMessage(with error: AudioPlayerError) {
-        DispatchQueue.main.async {
-            self.errorMessage = error.localizedDescription
+    func setRate(to rate: Float) -> Effect<Never, Never> {
+        return .fireAndForget { [weak self] in
+            self?.player?.rate = rate
+            print("Audio player rate set to \(rate)")
         }
     }
     
     // MARK: - AVAudioPlayerDelegate
+    
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        DispatchQueue.main.async {
-            self.isPlaying = false
-            self.currentTime = 0.0
-            self.stopTimer()
-        }
+        print("Audio player finished playing")
+        // Handle the end of audio playback
     }
 }

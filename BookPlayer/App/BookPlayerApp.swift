@@ -11,14 +11,17 @@ import ComposableArchitecture
 @main
 struct BookPlayerApp: App {
     var body: some Scene {
-            WindowGroup {
-                AudioBookPlayerView(
-                    store: Store(
-                        initialState: AudioPlayerState(),
-                        reducer: audioPlayerReducer,
-                        environment: AudioPlayerEnvironment(mainQueue: DispatchQueue.main.eraseToAnyScheduler())
+        WindowGroup {
+            AudioBookPlayerView(
+                store: Store(
+                    initialState: AudioPlayerState(),
+                    reducer: audioPlayerReducer,
+                    environment: AudioPlayerEnvironment(
+                        audioPlayerService: .live,
+                        mainQueue: DispatchQueue.main.eraseToAnyScheduler()
                     )
                 )
-            }
+            )
         }
+    }
 }

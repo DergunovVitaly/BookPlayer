@@ -9,5 +9,7 @@ import Foundation
 import ComposableArchitecture
 
 struct AudioPlayerEnvironment {
+    var audioPlayerService: AudioPlayerService
     var mainQueue: AnySchedulerOf<DispatchQueue>
 }
+

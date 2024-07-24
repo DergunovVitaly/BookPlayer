@@ -24,9 +24,9 @@ struct PlaybackControlsView: View {
     var body: some View {
         HStack(spacing: 40) {
             Button(action: {
-                viewStore.send(.selectChapter(viewStore.selectedChapterIndex - 1))
-                viewStore.send(.setupAudioPlayer(AudioBookModel.allBooks[viewStore.selectedBookIndex].chapters[viewStore.selectedChapterIndex].audioFileName))
-                viewStore.send(.play)
+                if viewStore.selectedChapterIndex > 0 {
+                    viewStore.send(.selectChapter(viewStore.selectedChapterIndex - 1))
+                }
             }) {
                 Image(systemName: Constants.backward)
                     .resizable()
@@ -70,9 +70,9 @@ struct PlaybackControlsView: View {
             .scaleEffect(1.1)
 
             Button(action: {
-                viewStore.send(.selectChapter(viewStore.selectedChapterIndex + 1))
-                viewStore.send(.setupAudioPlayer(AudioBookModel.allBooks[viewStore.selectedBookIndex].chapters[viewStore.selectedChapterIndex].audioFileName))
-                viewStore.send(.play)
+                if viewStore.selectedChapterIndex < totalChapters - 1 {
+                    viewStore.send(.selectChapter(viewStore.selectedChapterIndex + 1))
+                }
             }) {
                 Image(systemName: Constants.forward)
                     .resizable()

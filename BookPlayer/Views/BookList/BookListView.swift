@@ -21,8 +21,6 @@ struct BookListView: View {
                                 Button(action: {
                                     viewStore.send(.selectBook(bookIndex))
                                     viewStore.send(.selectChapter(chapterIndex))
-                                    viewStore.send(.setupAudioPlayer(AudioBookModel.allBooks[bookIndex].chapters[chapterIndex].audioFileName))
-                                    viewStore.send(.play)
                                 }) {
                                     Text(AudioBookModel.allBooks[bookIndex].chapters[chapterIndex].title)
                                 }

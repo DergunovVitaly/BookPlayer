@@ -16,6 +16,7 @@ struct AudioPlayerState: Equatable {
     var selectedChapterIndex: Int = 0
     var showBookList = false
     var playerDuration: TimeInterval = 0.0
+    var currentFile: String?
 
     static func == (lhs: AudioPlayerState, rhs: AudioPlayerState) -> Bool {
         return lhs.isPlaying == rhs.isPlaying &&
