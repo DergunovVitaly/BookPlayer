@@ -147,8 +147,8 @@ final class LoginViewController: UIViewController {
     
     // MARK: - Setup views
     func setupViewModel() {
-        viewModel.stateData.bind { [weak self] (stateData) in
-            guard let self = self else { return }
+        viewModel.stateData.bind { /*[weak self]*/ (stateData) in
+//            guard let self = self else { return }
             switch stateData.state {
             case .idle:
                 break

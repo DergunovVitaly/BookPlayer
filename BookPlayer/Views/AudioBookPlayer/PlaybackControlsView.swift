@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 fileprivate struct Constants {
     static let backward = "backward.end.fill"
-    static let gobackward = "gobackward.5"
+    static let gobackward = "gobackward.10"
     static let pause = "pause.fill"
     static let play = "play.fill"
     static let goforward = "goforward.10"
@@ -17,37 +18,26 @@ fileprivate struct Constants {
 }
 
 struct PlaybackControlsView: View {
-    
-    @ObservedObject var audioPlayer: AudioPlayer
-    @Binding var selectedChapterIndex: Int
-    
+    let viewStore: ViewStore<AudioPlayerState, AudioPlayerAction>
     let totalChapters: Int
-    let previousChapter: () -> Void
-    let nextChapter: () -> Void
     
     var body: some View {
         HStack(spacing: 40) {
             Button(action: {
-                withAnimation(.easeInOut) {
-                    self.previousChapter()
-                }
+                viewStore.send(.selectChapter(viewStore.selectedChapterIndex - 1))
+                viewStore.send(.setupAudioPlayer(AudioBookModel.allBooks[viewStore.selectedBookIndex].chapters[viewStore.selectedChapterIndex].audioFileName))
+                viewStore.send(.play)
             }) {
                 Image(systemName: Constants.backward)
                     .resizable()
                     .frame(width: 20, height: 20)
             }
-            .disabled(selectedChapterIndex == 0)
-            .foregroundColor(selectedChapterIndex == 0 ? .gray : .black)
-            .scaleEffect(selectedChapterIndex == 0 ? 1.0 : 1.1)
+            .disabled(viewStore.selectedChapterIndex == 0)
+            .foregroundColor(viewStore.selectedChapterIndex == 0 ? .gray : .black)
+            .scaleEffect(viewStore.selectedChapterIndex == 0 ? 1.0 : 1.1)
 
             Button(action: {
-                withAnimation(.easeInOut) {
-                    DispatchQueue.main.async {
-                        Task {
-                            await self.audioPlayer.rewindAudio()
-                        }
-                    }
-                }
+                viewStore.send(.rewindAudio)
             }) {
                 Image(systemName: Constants.gobackward)
                     .resizable()
@@ -58,31 +48,18 @@ struct PlaybackControlsView: View {
             .scaleEffect(1.1)
 
             Button(action: {
-                withAnimation(.easeInOut) {
-                    DispatchQueue.main.async {
-                        Task {
-                            await self.audioPlayer.playPauseAudio()
-                        }
-                    }
-                }
+                viewStore.send(.playPauseAudio)
             }) {
-                Image(systemName: self.audioPlayer.isPlaying ? Constants.pause : Constants.play)
+                Image(systemName: viewStore.isPlaying ? Constants.pause : Constants.play)
                     .resizable()
                     .foregroundColor(.black)
                     .frame(width: 40, height: 40)
                     .transition(.scale)
-                    .animation(.easeInOut(duration: 0.3), value: audioPlayer.isPlaying)
             }
-            .scaleEffect(audioPlayer.isPlaying ? 1.1 : 1.0)
+            .scaleEffect(viewStore.isPlaying ? 1.1 : 1.0)
 
             Button(action: {
-                withAnimation(.easeInOut) {
-                    DispatchQueue.main.async {
-                        Task {
-                            await self.audioPlayer.forwardAudio()
-                        }
-                    }
-                }
+                viewStore.send(.forwardAudio)
             }) {
                 Image(systemName: Constants.goforward)
                     .resizable()
@@ -93,25 +70,19 @@ struct PlaybackControlsView: View {
             .scaleEffect(1.1)
 
             Button(action: {
-                withAnimation(.easeInOut) {
-                    self.nextChapter()
-                }
+                viewStore.send(.selectChapter(viewStore.selectedChapterIndex + 1))
+                viewStore.send(.setupAudioPlayer(AudioBookModel.allBooks[viewStore.selectedBookIndex].chapters[viewStore.selectedChapterIndex].audioFileName))
+                viewStore.send(.play)
             }) {
                 Image(systemName: Constants.forward)
                     .resizable()
                     .bold()
                     .frame(width: 20, height: 20)
             }
-            .disabled(selectedChapterIndex == totalChapters - 1)
-            .foregroundColor(selectedChapterIndex == totalChapters - 1 ? .gray : .black)
-            .scaleEffect(selectedChapterIndex == totalChapters - 1 ? 1.0 : 1.1)
+            .disabled(viewStore.selectedChapterIndex == totalChapters - 1)
+            .foregroundColor(viewStore.selectedChapterIndex == totalChapters - 1 ? .gray : .black)
+            .scaleEffect(viewStore.selectedChapterIndex == totalChapters - 1 ? 1.0 : 1.1)
         }
         .padding(.bottom, 40)
-        .animation(.easeInOut, value: selectedChapterIndex)
-        .animation(.easeInOut, value: audioPlayer.isPlaying)
     }
-}
-
-#Preview {
-    PlaybackControlsView(audioPlayer: AudioPlayer(), selectedChapterIndex: .constant(1), totalChapters: 2, previousChapter: {}, nextChapter: {})
 }

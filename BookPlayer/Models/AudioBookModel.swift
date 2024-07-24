@@ -6,17 +6,19 @@
 //
 
 import Foundation
+import ComposableArchitecture
 
-struct Chapter {
+struct Chapter: Equatable, Identifiable {
+    let id = UUID()
     let title: String
     let audioFileName: String
 }
 
-struct AudioBookModel {
+struct AudioBookModel: Equatable, Identifiable {
+    let id = UUID()
     let title: String
     let chapters: [Chapter]
     
-    //MARK: Mocked books
     static let allBooks: [AudioBookModel] = [
         AudioBookModel(
             title: "Learn English",
@@ -32,7 +34,6 @@ struct AudioBookModel {
             chapters: [
                 Chapter(title: "First conversation", audioFileName: "toefl-conversation-1"),
                 Chapter(title: "Second conversation", audioFileName: "toefl-conversation-2")
-            ]),
+            ])
     ]
 }
-

@@ -70,6 +70,12 @@
     "ok" : {
       "extractionState" : "manual"
     },
+    "OK" : {
+
+    },
+    "Select Book and Chapter" : {
+
+    },
     "select_book_and_chapter" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -102,6 +108,9 @@
           }
         }
       }
+    },
+    "Speed: %@" : {
+
     },
     "title" : {
       "extractionState" : "manual",

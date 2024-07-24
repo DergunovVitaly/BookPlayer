@@ -6,40 +6,32 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct BookListView: View {
-    @Binding var selectedBookIndex: Int
-    @Binding var selectedChapterIndex: Int
-    var audioPlayer: AudioPlayer
-    let books: [AudioBookModel]
-    let dismiss: () -> Void
+    let store: Store<AudioPlayerState, AudioPlayerAction>
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(books.indices, id: \.self) { bookIndex in
-                    Section(header: Text(self.books[bookIndex].title)) {
-                        ForEach(self.books[bookIndex].chapters.indices, id: \.self) { chapterIndex in
-                            Button(action: {
-                                self.selectedBookIndex = bookIndex
-                                self.selectedChapterIndex = chapterIndex
-                                Task {
-                                    await self.audioPlayer.setupAudioPlayer(with: self.books[bookIndex].chapters[chapterIndex].audioFileName)
-                                    await self.audioPlayer.play()
-                                    self.dismiss()
+        WithViewStore(self.store) { viewStore in
+            NavigationView {
+                List {
+                    ForEach(AudioBookModel.allBooks.indices, id: \.self) { bookIndex in
+                        Section(header: Text(AudioBookModel.allBooks[bookIndex].title)) {
+                            ForEach(AudioBookModel.allBooks[bookIndex].chapters.indices, id: \.self) { chapterIndex in
+                                Button(action: {
+                                    viewStore.send(.selectBook(bookIndex))
+                                    viewStore.send(.selectChapter(chapterIndex))
+                                    viewStore.send(.setupAudioPlayer(AudioBookModel.allBooks[bookIndex].chapters[chapterIndex].audioFileName))
+                                    viewStore.send(.play)
+                                }) {
+                                    Text(AudioBookModel.allBooks[bookIndex].chapters[chapterIndex].title)
                                 }
-                            }) {
-                                Text(self.books[bookIndex].chapters[chapterIndex].title)
                             }
                         }
                     }
                 }
+                .navigationBarTitle("Select Book and Chapter", displayMode: .inline)
             }
-            .navigationBarTitle(Localization.selectBookAndChapter, displayMode: .inline)
         }
     }
-}
-
-#Preview {
-    BookListView(selectedBookIndex: .constant(1), selectedChapterIndex: .constant(2), audioPlayer: AudioPlayer(), books: AudioBookModel.allBooks, dismiss: {})
 }

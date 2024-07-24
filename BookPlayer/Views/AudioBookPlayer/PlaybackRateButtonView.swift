@@ -12,14 +12,13 @@ fileprivate struct Constants {
 }
 
 struct PlaybackRateButtonView: View {
-    @Binding var playbackRate: Double
-    let changePlaybackRate: () -> Void
+    @Binding var playbackRate: Float
     
     var body: some View {
         Button(action: {
-            self.changePlaybackRate()
+            // Handle playback rate change
         }) {
-            Text(Localization.speed + "\(String(format: Constants.textFormat, playbackRate))")
+            Text("Speed: \(String(format: Constants.textFormat, playbackRate))")
                 .foregroundStyle(.black)
                 .bold()
                 .font(.system(size: 14))
@@ -29,8 +28,4 @@ struct PlaybackRateButtonView: View {
         }
         .padding(.bottom, 40)
     }
-}
-
-#Preview {
-    PlaybackRateButtonView(playbackRate: .constant(1.3), changePlaybackRate: {})
 }

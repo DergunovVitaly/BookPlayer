@@ -1,8 +1,8 @@
 //
-//  AudioPlayer.swift
+//  AudioPlayerLogic.swift
 //  BookPlayer
 //
-//  Created by Vitaliy on 18.07.2024.
+//  Created by Vitaliy on 23.07.2024.
 //
 
 import Foundation
